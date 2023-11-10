@@ -1,3 +1,5 @@
+
+# install with py -m pip install pendulum
 import pendulum as p
 
 def time_zones():

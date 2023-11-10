@@ -32,4 +32,4 @@ def matrix_generator():
     for row in my_matrix:
         for j in range(columns):
             row.append(0)
-    return myMatrix
+    return my_matrix

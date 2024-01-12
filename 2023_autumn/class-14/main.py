@@ -28,12 +28,15 @@ WHITE = (255, 255, 255)
 
 def drawWindow(red, yellow):
     WINDOW.fill(WHITE)
-    
+    WINDOW.blit(YELLOW_S_START, (yellow.x, yellow.y))   
+    WINDOW.blit(RED_S_START, (red.x, red.y))   
     pygame.display.update()
 
 
 def main():
-    
+    red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+    yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+
     clock = pygame.time.Clock()
     run = True
 
@@ -42,7 +45,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        
+        key_pressed = pygame.key.get_pressed()
+        drawWindow(red, yellow)
     pygame.quit()
 
 

@@ -44,24 +44,24 @@ SPACE = pygame.transform.scale(
 )
 
 def yellow_control(keys_pressed, yellow):
-    if keys_pressed[pygame.K_a]:
+    if keys_pressed[pygame.K_a] and yellow.x - VEL > -15:
         yellow.x -= VEL
-    if keys_pressed[pygame.K_d]:
+    if keys_pressed[pygame.K_d] and yellow.x + VEL + yellow.height -15 < BORDER.x:
         yellow.x += VEL
-    if keys_pressed[pygame.K_w]:
+    if keys_pressed[pygame.K_w] and yellow.y - VEL > -10:
         yellow.y -= VEL
-    if keys_pressed[pygame.K_s]:
+    if keys_pressed[pygame.K_s] and yellow.y + VEL + yellow.width < HEIGHT:
         yellow.y += VEL
 
 
 def red_control(keys_pressed, red):
-    if keys_pressed[pygame.K_LEFT]:
+    if keys_pressed[pygame.K_LEFT] and red.x - VEL + 15 > BORDER.x + BORDER.width:
         red.x -= VEL
-    if keys_pressed[pygame.K_RIGHT]:
+    if keys_pressed[pygame.K_RIGHT] and red.x + VEL + red.height - 35 < WIDTH:
         red.x += VEL
-    if keys_pressed[pygame.K_UP]:
+    if keys_pressed[pygame.K_UP] and red.y - VEL > -10:
         red.y -= VEL
-    if keys_pressed[pygame.K_DOWN]:
+    if keys_pressed[pygame.K_DOWN] and red.y + VEL + red.width < HEIGHT:
         red.y += VEL
 
 
@@ -76,12 +76,24 @@ def drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_heal
     
     WINDOW.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WINDOW.blit(RED_SPACESHIP, (red.x, red.y))
+
+    for bullet in red_bullets:
+        pygame.draw.rect(WINDOW, RED, bullet)
+    for bullet in yellow_bullets:
+        pygame.draw.rect(WINDOW, YELLOW, bullet)
+
     pygame.display.update()
 
 
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+
+    red_bullets = []
+    yellow_bullets = []
+
+    red_health = 10
+    yellow_health = 10
 
     clock = pygame.time.Clock()
     run = True
@@ -94,7 +106,7 @@ def main():
         keys_pressed = pygame.key.get_pressed()
         red_control(keys_pressed, red)
         yellow_control(keys_pressed, yellow)
-        drawWindow(red, yellow)
+        drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health)
     pygame.quit()
 
 

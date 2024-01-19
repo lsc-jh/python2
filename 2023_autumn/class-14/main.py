@@ -23,9 +23,13 @@ HEALTH_FONT = pygame.font.SysFont('arial', 40)
 
 FPS = 60
 VEL = 5
+BULLET_VEL = 7 # uj
+MAX_BULLETS = 3 # uj
 SPACESHIP_WIDTH = 80
 SPACESHIP_HEIGHT = 60
 
+YELLOW_HIT = pygame.USEREVENT + 1
+RED_HIT = pygame.USEREVENT + 2
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_yellow.png'))
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(
@@ -35,6 +39,9 @@ RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.pn
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(
     RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
+SPACE = pygame.transform.scale(
+    pygame.image.load(os.path.join('Assets', 'space.png')), (WIDTH, HEIGHT)
+)
 
 def yellow_control(keys_pressed, yellow):
     if keys_pressed[pygame.K_a]:
@@ -58,8 +65,15 @@ def red_control(keys_pressed, red):
         red.y += VEL
 
 
-def drawWindow(red, yellow):
-    WINDOW.fill(WHITE)
+def drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
+    WINDOW.blit(SPACE, (0, 0))
+    pygame.draw.rect(WINDOW, BLACK, BORDER)
+
+    red_health_text = HEALTH_FONT.render(f"Health: " + str(red_health), True, WHITE)
+    yellow_health_text = HEALTH_FONT.render(f"Health: " + str(yellow_health), True, WHITE)
+    WINDOW.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
+    WINDOW.blit(yellow_health_text, (10, 10))
+    
     WINDOW.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WINDOW.blit(RED_SPACESHIP, (red.x, red.y))
     pygame.display.update()

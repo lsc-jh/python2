@@ -3,33 +3,52 @@ import os
 
 WIDTH = 900
 HEIGHT = 500
-SIZE = (WIDTH, HEIGHT)
-WINDOW = pygame.display.set_mode(SIZE)
+WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Space fight")
 
+WHITE = (255, 255, 255)
+
+FPS = 60
+VEL = 5
 SPACESHIP_WIDTH = 80
 SPACESHIP_HEIGHT = 60
-VEL = 5
 
-YELLOW_S_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_yellow.png'))
-RED_S_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.png'))
 
-RED_S_START = pygame.transform.rotate(
-    pygame.transform.scale(RED_S_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),
-    270
-)
+YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_yellow.png'))
+YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(
+    YELLOW_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90)
 
-YELLOW_S_START = pygame.transform.rotate(
-    pygame.transform.scale(YELLOW_S_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),
-    90
-) 
+RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_red.png'))
+RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(
+    RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
-# Colors
-WHITE = (255, 255, 255)
+
+def yellow_control(keys_pressed, yellow):
+    if keys_pressed[pygame.K_a]:
+        yellow.x -= VEL
+    if keys_pressed[pygame.K_d]:
+        yellow.x += VEL
+    if keys_pressed[pygame.K_w]:
+        yellow.y -= VEL
+    if keys_pressed[pygame.K_s]:
+        yellow.y += VEL
+
+
+def red_control(keys_pressed, red):
+    if keys_pressed[pygame.K_LEFT]:
+        red.x -= VEL
+    if keys_pressed[pygame.K_RIGHT]:
+        red.x += VEL
+    if keys_pressed[pygame.K_UP]:
+        red.y -= VEL
+    if keys_pressed[pygame.K_DOWN]:
+        red.y += VEL
+
 
 def drawWindow(red, yellow):
     WINDOW.fill(WHITE)
-    WINDOW.blit(YELLOW_S_START, (yellow.x, yellow.y))   
-    WINDOW.blit(RED_S_START, (red.x, red.y))   
+    WINDOW.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
+    WINDOW.blit(RED_SPACESHIP, (red.x, red.y))
     pygame.display.update()
 
 
@@ -39,17 +58,18 @@ def main():
 
     clock = pygame.time.Clock()
     run = True
-
     while run:
-        clock.tick(60)
+        clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        key_pressed = pygame.key.get_pressed()
+        # yellow.x += 1
+        keys_pressed = pygame.key.get_pressed()
+        red_control(keys_pressed, red)
+        yellow_control(keys_pressed, yellow)
         drawWindow(red, yellow)
     pygame.quit()
 
 
 if __name__ == "__main__":
     main()
-

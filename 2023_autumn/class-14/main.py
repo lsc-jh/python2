@@ -1,12 +1,25 @@
 import pygame
 import os
 
+pygame.mixer.init()
+pygame.font.init()
+
 WIDTH = 900
 HEIGHT = 500
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space fight")
 
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
+
+BORDER = pygame.Rect(WIDTH // 2 - 5, 0, 10, HEIGHT)
+
+HIT_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'explosion.wav'))
+FIRE_SOUND = pygame.mixer.Sound(os.path.join('Assets', 'laser.wav'))
+
+HEALTH_FONT = pygame.font.SysFont('arial', 40)
 
 FPS = 60
 VEL = 5

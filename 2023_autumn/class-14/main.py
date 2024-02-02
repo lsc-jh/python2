@@ -1,6 +1,8 @@
 import pygame
 import os
 
+from pygame.rect import Rect
+
 pygame.mixer.init()
 pygame.font.init()
 
@@ -84,7 +86,35 @@ def drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_heal
 
     pygame.display.update()
 
+def check_meteor_coll(meteors, ship: Rect, event):
+    for meteor in meteors:
+        if ship.colliderect(meteor):
+            meteor.x = 480
+            meteor.y = 240
+            pygame.event.post(pygame.event.Event(event))
 
+
+def handle_bullets(yellow_bullets, red_bullets, yellow: Rect, red: Rect, meteor_1: Rect, meteor_2:Rect, meteor_3: Rect):
+    for bullet in yellow_bullets:
+        bullet.x += BULLET_VEL
+        if red.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(RED_HIT))
+            yellow_bullets.remove(bullet)
+        elif bullet.x > WIDTH:
+            yellow_bullets.remove(bullet)
+        elif meteor_1.colliderect(bullet) or meteor_2.colliderect(bullet) or meteor_3.colliderect(bullet):
+            yellow_bullets.remove(bullet)
+
+    for bullet in red_bullets:
+        bullet.x -= BULLET_VEL
+        if yellow.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(YELLOW_HIT))
+            red_bullets.remove(bullet)
+        elif bullet.x < 0:
+            red_bullets.remove(bullet)
+        elif meteor_1.colliderect(bullet) or meteor_2.colliderect(bullet) or meteor_3.colliderect(bullet):
+            red_bullets.remove(bullet)
+            
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)

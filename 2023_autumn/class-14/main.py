@@ -1,5 +1,7 @@
 import pygame
 import os
+import random
+import math
 
 from pygame.rect import Rect
 
@@ -32,6 +34,25 @@ SPACESHIP_HEIGHT = 60
 
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2
+METEOR_IMAGE = pygame.image.load(os.path.join('Assets', 'meteor.jpg'))
+
+def get_meteor_image():
+    return pygame.transform.rotate(pygame.transform.scale(METEOR_IMAGE, (50, 50)), 90)
+
+METEOR_1 = get_meteor_image()
+METEOR_2 = get_meteor_image()
+METEOR_3 = get_meteor_image()
+
+METEOR_VEL = 2
+METEOR_1_DIR = random.randint(0, 359)
+METEOR_2_DIR = random.randint(0, 359)
+METEOR_3_DIR = random.randint(0, 359)
+METEOR_1_X_VEL = math.cos(METEOR_1_DIR) * METEOR_VEL
+METEOR_1_Y_VEL = math.sin(METEOR_1_DIR) * METEOR_VEL
+METEOR_2_X_VEL = math.cos(METEOR_2_DIR) * METEOR_VEL
+METEOR_2_Y_VEL = math.sin(METEOR_2_DIR) * METEOR_VEL
+METEOR_3_X_VEL = math.cos(METEOR_3_DIR) * METEOR_VEL
+METEOR_3_Y_VEL = math.sin(METEOR_3_DIR) * METEOR_VEL
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets', 'spaceship_yellow.png'))
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(
@@ -67,7 +88,7 @@ def red_control(keys_pressed, red):
         red.y += VEL
 
 
-def drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
+def drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health, meteors): # uj a `meteors`
     WINDOW.blit(SPACE, (0, 0))
     pygame.draw.rect(WINDOW, BLACK, BORDER)
 
@@ -78,7 +99,11 @@ def drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_heal
     
     WINDOW.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WINDOW.blit(RED_SPACESHIP, (red.x, red.y))
-
+    # innen
+    images = [METEOR_1, METEOR_2, METEOR_3]
+    for index in range(0, len(meteors)):
+        WINDOW.blit(images[index], (meteors[index].x, meteors[index].y))
+    # eddig
     for bullet in red_bullets:
         pygame.draw.rect(WINDOW, RED, bullet)
     for bullet in yellow_bullets:
@@ -114,10 +139,34 @@ def handle_bullets(yellow_bullets, red_bullets, yellow: Rect, red: Rect, meteor_
             red_bullets.remove(bullet)
         elif meteor_1.colliderect(bullet) or meteor_2.colliderect(bullet) or meteor_3.colliderect(bullet):
             red_bullets.remove(bullet)
-            
+
+    check_meteor_coll([meteor_1, meteor_2, meteor_3], yellow, YELLOW_HIT)
+    check_meteor_coll([meteor_1, meteor_2, meteor_3], red, RED_HIT)
+
+def position_meteor(meteor, x, y):
+    meteor.x += x
+    meteor.y += y
+    
+    if meteor.x > 999:
+        meteor.x = 1
+    if meteor.x < 1:
+        meteor.x = 999
+    if meteor.y > 499:
+        meteor.y = 1
+    if meteor.y < 1:
+        meteor.y = 499
+
+def move_meteors(meteor_1, meteor_2, meteor_3):
+    position_meteor(meteor_1, METEOR_1_X_VEL, METEOR_1_Y_VEL)
+    position_meteor(meteor_2, METEOR_2_X_VEL, METEOR_2_Y_VEL)
+    position_meteor(meteor_3, METEOR_3_X_VEL, METEOR_3_Y_VEL)
+
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+    meteor_1 = pygame.Rect(480, 240, 50, 50)
+    meteor_2 = pygame.Rect(480, 240, 50, 50)
+    meteor_3 = pygame.Rect(480, 240, 50, 50)
 
     red_bullets = []
     yellow_bullets = []
@@ -136,7 +185,8 @@ def main():
         keys_pressed = pygame.key.get_pressed()
         red_control(keys_pressed, red)
         yellow_control(keys_pressed, yellow)
-        drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health)
+        move_meteors(meteor_1, meteor_2, meteor_3)
+        drawWindow(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health, [meteor_1, meteor_2, meteor_3])
     pygame.quit()
 
 

@@ -34,7 +34,7 @@ SPACESHIP_HEIGHT = 60
 
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2
-METEOR_IMAGE = pygame.image.load(os.path.join('Assets', 'meteor.jpg'))
+METEOR_IMAGE = pygame.image.load(os.path.join('Assets', 'meteor.png'))
 
 def get_meteor_image():
     return pygame.transform.rotate(pygame.transform.scale(METEOR_IMAGE, (50, 50)), 90)

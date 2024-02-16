@@ -1,3 +1,6 @@
+from myerror import MyError
+
+
 # Input error
 value = int(input("enter an integer: "))
 print(f'Half of {value} is {value / 2}')
@@ -42,6 +45,30 @@ def division(a, b):
     else:
         print("well done")
 division(0, 0)
+
+try:
+    f = open('test.txt', 'a+')
+    try:
+        f.write("Lorem ipsum")
+    except:
+        print("Writing the file went wrong!")
+    finally:
+        f.close()
+except:
+    print("Opening the file went wrong!")
+
+
+value = input("enter a message: ")
+
+try:
+    if value == "" or value is None:
+        raise MyError("The input is empty")
+except MyError as e:
+    print(e.msg)
+except: 
+    print("Bla")
+
+print(value)
 
 
 

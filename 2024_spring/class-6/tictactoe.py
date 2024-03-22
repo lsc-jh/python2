@@ -1,3 +1,5 @@
+from advanced_selector import SingleMenu
+
 
 class Player:
     def __init__(self, name):
@@ -31,3 +33,11 @@ def option_hits(option1, option2):
         return True
 
     return False
+
+def play(player1, player2):
+    pass
+
+def main():
+    print("Welcom to the Rock, Paper, Scissors game!")
+    player1 = Player(input("Player 1: "))
+    player2 = Player(input("Player 2: "))

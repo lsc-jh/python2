@@ -39,5 +39,12 @@ def play(player1, player2):
 
 def main():
     print("Welcom to the Rock, Paper, Scissors game!")
-    player1 = Player(input("Player 1: "))
-    player2 = Player(input("Player 2: "))
+    try:
+        player1 = Player(input("Player 1: "))
+        player2 = Player(input("Player 2: "))
+        play(player1, player2)
+    except KeyboardInterrupt:
+        print("\nGame ended.")
+
+if __name__ == "__main__":
+    main()

@@ -22,6 +22,7 @@ options = [
     Option("Scissors", "scissors")
 ]
 
+
 def option_hits(option1, option2):
     if option1 == option2:
         return None
@@ -37,15 +38,32 @@ def option_hits(option1, option2):
 
     return False
 
+
 def play(player1, player2):
-    active_player = player1
     while True:
-        menu = SingleMenu("Select an option", options)
+        menu = SingleMenu(f"{player1.name}, select an option", options)
         player1_selection = menu.show()
+        if player1_selection is None:
+            print("Player 1 not selected an option.")
+            break
+
+        menu = SingleMenu(f"{player2.name}, select an option", options)
         player2_selection = menu.show()
-        print(f"{player1.name} selected {player1_selection}")
-        print(f"{player2.name} selected {player2_selection}")
+        if player2_selection is None:
+            print("Player 2 not selected an option.")
+            break
+
+        p1_hit_p2 = option_hits(player1_selection.value, player2_selection.value)
+        if p1_hit_p2 is None:
+            print("Draw")
+        if p1_hit_p2:
+            player1.score += 1
+            print(f"{player1.name} wins!")
+        else:
+            player2.score += 1
+            print(f"{player2.name} wins!")
         input("Press Enter to continue...")
+    print(f"{player1.name}: {player1.score} - {player2.name}: {player2.score}")
 
 
 def main():
@@ -56,6 +74,7 @@ def main():
         play(player1, player2)
     except KeyboardInterrupt:
         print("\nGame ended.")
+
 
 if __name__ == "__main__":
     main()

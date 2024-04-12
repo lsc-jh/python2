@@ -69,11 +69,11 @@ def play(player1, player2):
 
 def who_won(player1, player2):
     if player1.score > player2.score:
-        print(f"{player1.name} wins!")
+        print(f"Final: {player1.name} wins!")
     elif player1.score < player2.score:
-        print(f"{player2.name} wins!")
+        print(f"Final: {player2.name} wins!")
     else:
-        print("Draw!")
+        print("Final: Draw!")
 
 
 def main():
@@ -84,7 +84,6 @@ def main():
         play(player1, player2)
         who_won(player1, player2)
     except KeyboardInterrupt:
-        who_won(player1, player2)
         print("\nGame ended.")
 
 

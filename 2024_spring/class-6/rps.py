@@ -54,6 +54,7 @@ def play(player1, player2):
             break
 
         p1_hit_p2 = option_hits(player1_selection.value, player2_selection.value)
+        print(f"{player1.name}: {player1_selection.value} - {player2.name}: {player2_selection.value}")
         if p1_hit_p2 is None:
             print("Draw")
         if p1_hit_p2:

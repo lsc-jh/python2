@@ -67,13 +67,24 @@ def play(player1, player2):
     print(f"{player1.name}: {player1.score} - {player2.name}: {player2.score}")
 
 
+def who_won(player1, player2):
+    if player1.score > player2.score:
+        print(f"{player1.name} wins!")
+    elif player1.score < player2.score:
+        print(f"{player2.name} wins!")
+    else:
+        print("Draw!")
+
+
 def main():
     print("Welcom to the Rock, Paper, Scissors game!")
+    player1 = Player(input("Player 1: "))
+    player2 = Player(input("Player 2: "))
     try:
-        player1 = Player(input("Player 1: "))
-        player2 = Player(input("Player 2: "))
         play(player1, player2)
+        who_won(player1, player2)
     except KeyboardInterrupt:
+        who_won(player1, player2)
         print("\nGame ended.")
 
 

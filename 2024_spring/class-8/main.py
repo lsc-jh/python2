@@ -52,6 +52,10 @@ while not game_over:
             game_over = True
         if event.type == pygame.KEYDOWN:
             move(event.key)
+
+    if x1 >= dis.get_width() or x1 < 0 or y1 >= dis.get_height() or y1 < 0:
+        game_over = True
+
     x1 += x1_change
     y1 += y1_change
     dis.fill(white)

@@ -21,19 +21,16 @@ y1 = dis.get_height() / 2
 
 snake_block = 10
 
-x1_change = 0
-y1_change = 0
-
 clock = pygame.time.Clock()
-
 font_style = pygame.font.SysFont('Arial', 50)
+
 
 def message(msg, color):
     text = font_style.render(msg, True, color)
     dis.blit(text, [dis.get_width() / 2, dis.get_height() / 2])
 
-def move(key):
-    global x1_change, y1_change
+
+def move(key, x1_change, y1_change):
     if key == pygame.K_LEFT:
         x1_change = -snake_block
         y1_change = 0
@@ -46,10 +43,13 @@ def move(key):
     elif key == pygame.K_DOWN:
         y1_change = snake_block
         x1_change = 0
+    return x1_change, y1_change
 
-def our_snake(snake_block, snake_list):
+
+def our_snake(snake_list):
     for x in snake_list:
         pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
+
 
 def game_loop():
     game_over = False
@@ -78,26 +78,35 @@ def game_loop():
             if event.type == pygame.QUIT:
                 game_over = True
             if event.type == pygame.KEYDOWN:
-                move(event.key)
+                x1_change, y1_change = move(event.key, x1_change, y1_change)
         if x1 >= dis.get_width() or x1 < 0 or y1 >= dis.get_height() or y1 < 0:
             game_over = True
 
         x1 += x1_change
         y1 += y1_change
         dis.fill(white)
-        pygame.draw.rect(dis, black, [x1, y1, snake_block, snake_block])
         pygame.draw.rect(dis, blue, [food_x, food_y, snake_block, snake_block])
+
+        snake_head = [x1, y1]
+        snake_list.append(snake_head)
+        if len(snake_list) > length_of_snake:
+            del snake_list[0]
+
+        for x in snake_list[:-1]:
+            if x == snake_head:
+                game_close = True
+
+        our_snake(snake_list)
+
         pygame.display.update()  # Ez itt volt
 
         if x1 == food_x and y1 == food_y:
-            print('Yummy!!')
+            length_of_snake += 1
 
         clock.tick(30)
 
+    pygame.quit()
+    quit()
 
-message('You lost', red)
-pygame.display.update()
-time.sleep(2)
 
-pygame.quit()
-quit()
+game_loop()

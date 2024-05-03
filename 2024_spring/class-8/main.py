@@ -38,15 +38,25 @@ def message(msg, color):
 
 def move(key, x1_change, y1_change):
     if key == pygame.K_LEFT:
+        if x1_change == snake_block:
+            return x1_change, y1_change
+
         x1_change = -snake_block
         y1_change = 0
     elif key == pygame.K_RIGHT:
+        if x1_change == -snake_block:
+            return x1_change, y1_change
+
         x1_change = snake_block
         y1_change = 0
     elif key == pygame.K_UP:
+        if y1_change == snake_block:
+            return x1_change, y1_change
         y1_change = -snake_block
         x1_change = 0
     elif key == pygame.K_DOWN:
+        if y1_change == -snake_block:
+            return x1_change, y1_change
         y1_change = snake_block
         x1_change = 0
     return x1_change, y1_change

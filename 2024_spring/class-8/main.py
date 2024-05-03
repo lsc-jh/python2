@@ -19,7 +19,7 @@ yellow = (255, 255, 102)
 x1 = dis.get_width() / 2
 y1 = dis.get_height() / 2
 
-snake_block = 10
+snake_block = 20
 
 clock = pygame.time.Clock()
 font_style = pygame.font.SysFont('Arial', 25)
@@ -63,8 +63,8 @@ def move(key, x1_change, y1_change):
 
 
 def food_position():
-    food_x = round(random.randrange(0, dis.get_width() - snake_block) / 10.0) * 10.0
-    food_y = round(random.randrange(0, dis.get_height() - snake_block) / 10.0) * 10.0
+    food_x = round(random.randrange(0, dis.get_width() - snake_block) / snake_block) * snake_block
+    food_y = round(random.randrange(0, dis.get_height() - snake_block) / snake_block) * snake_block
     return food_x, food_y
 
 

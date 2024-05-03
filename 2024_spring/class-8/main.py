@@ -22,7 +22,13 @@ y1 = dis.get_height() / 2
 snake_block = 10
 
 clock = pygame.time.Clock()
-font_style = pygame.font.SysFont('Arial', 50)
+font_style = pygame.font.SysFont('Arial', 25)
+score_font = pygame.font.SysFont('Arial', 35)
+
+
+def print_score(score):
+    value = score_font.render('Your Score: ' + str(score), True, black)
+    dis.blit(value, [0, 0])
 
 
 def message(msg, color):
@@ -46,6 +52,12 @@ def move(key, x1_change, y1_change):
     return x1_change, y1_change
 
 
+def food_position():
+    food_x = round(random.randrange(0, dis.get_width() - snake_block) / 10.0) * 10.0
+    food_y = round(random.randrange(0, dis.get_height() - snake_block) / 10.0) * 10.0
+    return food_x, food_y
+
+
 def our_snake(snake_list):
     for x in snake_list:
         pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
@@ -61,8 +73,7 @@ def game_loop():
     snake_list = []
     length_of_snake = 1
 
-    food_x = round(random.randrange(0, dis.get_width() - snake_block) / 10.0) * 10.0
-    food_y = round(random.randrange(0, dis.get_height() - snake_block) / 10.0) * 10.0
+    food_x, food_y = food_position()
     while not game_over:
         while game_close:
 
@@ -71,7 +82,7 @@ def game_loop():
                     if event.key == pygame.K_q:
                         game_over = True
                         game_close = False
-                    if event.key == pygame.K_c:
+                    if event.key == pygame.K_r:  # K_c -> K_r
                         game_loop()
 
         for event in pygame.event.get():
@@ -79,8 +90,10 @@ def game_loop():
                 game_over = True
             if event.type == pygame.KEYDOWN:
                 x1_change, y1_change = move(event.key, x1_change, y1_change)
+
+        # If we hit the wall
         if x1 >= dis.get_width() or x1 < 0 or y1 >= dis.get_height() or y1 < 0:
-            game_over = True
+            game_close = True
 
         x1 += x1_change
         y1 += y1_change
@@ -97,10 +110,12 @@ def game_loop():
                 game_close = True
 
         our_snake(snake_list)
+        print_score(length_of_snake - 1)
 
         pygame.display.update()  # Ez itt volt
 
         if x1 == food_x and y1 == food_y:
+            food_x, food_y = food_position()
             length_of_snake += 1
 
         clock.tick(30)

@@ -76,7 +76,10 @@ def game_loop():
     food_x, food_y = food_position()
     while not game_over:
         while game_close:
-
+            dis.fill(blue)
+            message("You Lost! Press Q-Quit or R-Restart", red)
+            print_score(length_of_snake - 1)
+            pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:

@@ -47,15 +47,15 @@ def drawing():
             for k in range(j):
                 draw_file.write("-")
             draw_file.write("  ")
-            for k in range(10-j):
+            for k in range(10 - j):
                 draw_file.write("-")
             draw_file.write("\n")
             j += 1
         while j > 0:
-            for j in range(j):
+            for k in range(j):
                 draw_file.write("-")
             draw_file.write("  ")
-            for j in range(10-j):
+            for k in range(10 - j):
                 draw_file.write("-")
             draw_file.write("\n")
             j -= 1

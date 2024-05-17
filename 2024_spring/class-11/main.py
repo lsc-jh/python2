@@ -61,6 +61,7 @@ def drawing():
             j -= 1
     draw_file.seek(0)
     print(draw_file.read())
+    draw_file.close()
 
 
 drawing()

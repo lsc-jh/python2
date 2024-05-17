@@ -51,9 +51,21 @@ def best_movie():
     data = pd.read_csv('deniro.csv', skipinitialspace=True)
     best_score = max(data['Score'])
     row = data[data['Score'] == best_score]
-    iloc = row.iloc[0, 0]
-    print(f"Best movie: {row.iloc}")
+    print(f"Best movie: {row.iloc[0, 2]} the score is {row.iloc[0, 1]}")
 
 
-best_movie()
+# best_movie()
 
+
+# Task 6 - Average Score
+
+def average_score():
+    data = pd.read_csv('deniro.csv', skipinitialspace=True)
+    avg_score = 0
+    for i in data['Score']:
+        avg_score += i
+    avg_score = avg_score / len(data['Score'])
+    print(f"Average score: {avg_score}")
+
+
+average_score()

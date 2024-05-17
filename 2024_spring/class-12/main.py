@@ -68,4 +68,34 @@ def average_score():
     print(f"Average score: {avg_score}")
 
 
-average_score()
+# average_score()
+
+
+# Task 7 - Plot data
+
+def plot_data():
+    data = pd.read_csv('deniro.csv', skipinitialspace=True, usecols=['Year', 'Score'])
+    data.plot(x='Year', y='Score', kind='scatter')
+    plt.show()
+
+
+# plot_data()
+
+
+# Task 8 - Plot data with a data curve
+def plot_data_curve():
+    data = pd.read_csv('deniro.csv', skipinitialspace=True, usecols=['Year', 'Score'])
+    x = np.array(data['Year'])
+    y = np.array(data['Score'])
+    coefficients = np.polyfit(x, y, 3)
+    poly = np.poly1d(coefficients)
+    new_x = np.linspace(x[0], x[-1])
+    new_y = poly(new_x)
+    plt.plot(x, y, 'o', new_x, new_y)
+    plt.xlim([x[0] - 1, x[-1] + 1])
+    plt.title('Score vs Year')
+    plt.savefig('plot.jpg')
+    plt.show()
+
+
+plot_data_curve()

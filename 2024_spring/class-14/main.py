@@ -134,7 +134,7 @@ while True:
                 player1.cancel_jump()
     displaySurface.fill((0, 0, 0))
 
-    if player1.rect.top > HEIGHT / 3:
+    if player1.rect.top <= HEIGHT / 3:
         player1.pos.y += abs(player1.vel.y)
         for plat in platforms:
             plat.rect.y += abs(player1.vel.y)

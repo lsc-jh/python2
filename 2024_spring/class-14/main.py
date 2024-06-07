@@ -147,3 +147,4 @@ while True:
     platform_generator(platforms, all_sprites)
     py.display.update()
     framesPerSec.tick(FPS)
+

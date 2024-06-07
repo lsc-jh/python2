@@ -134,9 +134,16 @@ while True:
                 player1.cancel_jump()
     displaySurface.fill((0, 0, 0))
 
+    if player1.rect.top > HEIGHT / 3:
+        player1.pos.y += abs(player1.vel.y)
+        for plat in platforms:
+            plat.rect.y += abs(player1.vel.y)
+            if plat.rect.top >= HEIGHT:
+                plat.kill()
     for entity in all_sprites:
         displaySurface.blit(entity.surf, entity.rect)
     player1.move()
     player1.update(platforms)
+    platform_generator(platforms, all_sprites)
     py.display.update()
     framesPerSec.tick(FPS)

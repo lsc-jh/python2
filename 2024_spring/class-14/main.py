@@ -64,9 +64,11 @@ class Player(py.sprite.Sprite):
 class Platform(py.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = py.Surface((WIDTH, 20))
-        self.surf.fill((255, 0, 0))
-        self.rect = self.surf.get_rect(center=(WIDTH / 2, HEIGHT - 10))
+        self.surf = py.Surface((random.randint(50, 100), 12))
+        self.surf.fill((0, 255, 0))
+        _w = random.randint(0, WIDTH - 10)
+        _h = random.randint(0, HEIGHT - 30)
+        self.rect = self.surf.get_rect(center=(_w, _h))
 
 
 def check(platform, _platforms):
@@ -87,25 +89,38 @@ def platform_generator(_platforms, _all_sprites):
     while len(_platforms) < 7:
         width = random.randrange(50, 100)
         p = Platform()
-        is_ok = True
-        while is_ok:
+        is_ok = False
+        while not is_ok:
             p = Platform()
             w = random.randrange(0, WIDTH - width)
             h = random.randrange(-50, 0)
             p.rect.center = (w, h)
-            # is_ok = chek ellenorzese (Ezt nem kell irni, hagyj ures sort!!!!!)
+            is_ok = check(p, _platforms)
         _platforms.add(p)
         _all_sprites.add(p)
 
 
-platform1 = Platform()
+ground = Platform()
+ground.surf = py.Surface((WIDTH, 20))
+ground.surf.fill((255, 0, 0))
+ground.rect = ground.surf.get_rect(center=(WIDTH / 2, HEIGHT - 10))
 player1 = Player()
+
 all_sprites = py.sprite.Group()
 all_sprites.add(player1)
-all_sprites.add(platform1)
+all_sprites.add(ground)
 
 platforms = py.sprite.Group()
-platforms.add(platform1)
+platforms.add(ground)
+
+for i in range(random.randint(5, 6)):
+    _is_ok = False
+    platform = Platform()
+    while not _is_ok:
+        platform = Platform()
+        _is_ok = check(platform, platforms)
+    platforms.add(platform)
+    all_sprites.add(platform)
 
 while True:
     for event in py.event.get():

@@ -1,4 +1,5 @@
 import pygame as py
+import random
 
 py.init()
 vector = py.math.Vector2
@@ -23,6 +24,19 @@ class Player(py.sprite.Sprite):
         self.vel = vector((0, 0))
         self.acc = vector((0, 0))
 
+        self.jumping = False
+
+    def jump(self, _platforms):
+        hits = py.sprite.spritecollide(self, _platforms, False)
+        if hits and not self.jumping:
+            self.jumping = True
+            self.vel.y = -15
+
+    def cancel_jump(self):
+        if self.jumping:
+            if self.vel.y < -3:
+                self.vel.y = -3
+
     def move(self):
         self.acc = vector(0, ACC)
         pressed_keys = py.key.get_pressed()
@@ -40,9 +54,10 @@ class Player(py.sprite.Sprite):
 
     def update(self, _platforms):
         hits = py.sprite.spritecollide(self, _platforms, False)
-        if hits:
-            self.pos.y = hits[0].rect.top
+        if hits and self.vel.y > 0:
+            self.pos.y = hits[0].rect.top + 1
             self.vel.y = 0
+            self.jumping = False
         self.rect.midbottom = self.pos
 
 
@@ -52,6 +67,35 @@ class Platform(py.sprite.Sprite):
         self.surf = py.Surface((WIDTH, 20))
         self.surf.fill((255, 0, 0))
         self.rect = self.surf.get_rect(center=(WIDTH / 2, HEIGHT - 10))
+
+
+def check(platform, _platforms):
+    if py.sprite.spritecollideany(platform, _platforms):
+        return False
+    else:
+        for p in _platforms:
+            if p == platform:
+                continue
+            space_top = abs(platform.rect.top - p.rect.bottom)
+            space_bottom = abs(platform.rect.bottom - p.rect.top)
+            if space_top < 50 and space_bottom < 50:
+                return False
+        return True
+
+
+def platform_generator(_platforms, _all_sprites):
+    while len(_platforms) < 7:
+        width = random.randrange(50, 100)
+        p = Platform()
+        is_ok = True
+        while is_ok:
+            p = Platform()
+            w = random.randrange(0, WIDTH - width)
+            h = random.randrange(-50, 0)
+            p.rect.center = (w, h)
+            # is_ok = chek ellenorzese (Ezt nem kell irni, hagyj ures sort!!!!!)
+        _platforms.add(p)
+        _all_sprites.add(p)
 
 
 platform1 = Platform()
@@ -67,6 +111,12 @@ while True:
     for event in py.event.get():
         if event.type == py.QUIT:
             py.quit()
+        if event.type == py.KEYDOWN:
+            if event.key == py.K_SPACE:
+                player1.jump(platforms)
+        if event.type == py.KEYUP:
+            if event.key == py.K_SPACE:
+                player1.cancel_jump()
     displaySurface.fill((0, 0, 0))
 
     for entity in all_sprites:
@@ -75,4 +125,3 @@ while True:
     player1.update(platforms)
     py.display.update()
     framesPerSec.tick(FPS)
-

@@ -1,3 +1,4 @@
+
 import pygame as py
 import random
 
@@ -25,6 +26,7 @@ class Player(py.sprite.Sprite):
         self.acc = vector((0, 0))
 
         self.jumping = False
+        self.score = 0
 
     def jump(self, _platforms):
         hits = py.sprite.spritecollide(self, _platforms, False)
@@ -61,6 +63,21 @@ class Player(py.sprite.Sprite):
         self.rect.midbottom = self.pos
 
 
+class Coin(py.sprite.Sprite):
+    def __init__(self, pos):
+        super().__init__()
+        self.surf = py.Surface((20, 20))
+        self.surf.fill((255, 255, 0))
+        self.rect = self.surf.get_rect(center=(random.randint(0, WIDTH), 0))
+
+        self.rect.topleft = pos
+
+    def update(self, collector: Player):
+        if self.rect.colliderect(collector.rect):
+            collector.score += 1
+            self.kill()
+
+
 class Platform(py.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -69,6 +86,10 @@ class Platform(py.sprite.Sprite):
         _w = random.randint(0, WIDTH - 10)
         _h = random.randint(0, HEIGHT - 30)
         self.rect = self.surf.get_rect(center=(_w, _h))
+
+    def generate_coin(self, _coins):
+        pos = (self.rect.centerx, self.rect.top - 30)
+        _coins.add(Coin(pos))
 
 
 def check(platform, _platforms):
@@ -85,7 +106,7 @@ def check(platform, _platforms):
         return True
 
 
-def platform_generator(_platforms, _all_sprites):
+def platform_generator(_platforms, _all_sprites, _coins):
     while len(_platforms) < 7:
         width = random.randrange(50, 100)
         p = Platform()
@@ -96,6 +117,7 @@ def platform_generator(_platforms, _all_sprites):
             h = random.randrange(-50, 0)
             p.rect.center = (w, h)
             is_ok = check(p, _platforms)
+        p.generate_coin(_coins)  # Uj
         _platforms.add(p)
         _all_sprites.add(p)
 
@@ -109,6 +131,7 @@ player1 = Player()
 all_sprites = py.sprite.Group()
 all_sprites.add(player1)
 all_sprites.add(ground)
+coins = py.sprite.Group()
 
 platforms = py.sprite.Group()
 platforms.add(ground)
@@ -119,6 +142,7 @@ for i in range(random.randint(5, 6)):
     while not _is_ok:
         platform = Platform()
         _is_ok = check(platform, platforms)
+    platform.generate_coin(coins)
     platforms.add(platform)
     all_sprites.add(platform)
 
@@ -140,11 +164,15 @@ while True:
             plat.rect.y += abs(player1.vel.y)
             if plat.rect.top >= HEIGHT:
                 plat.kill()
+        for coin in coins:
+            coin.rect.y += abs(player1.vel.y)
+            if coin.rect.top >= HEIGHT:
+                coin.kill()
     for entity in all_sprites:
         displaySurface.blit(entity.surf, entity.rect)
     player1.move()
     player1.update(platforms)
-    platform_generator(platforms, all_sprites)
+    platform_generator(platforms, all_sprites, coins)  # Uj (a coins parameter)
     py.display.update()
     framesPerSec.tick(FPS)
 

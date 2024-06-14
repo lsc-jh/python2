@@ -13,13 +13,15 @@ FPS = 60
 framesPerSec = py.time.Clock()
 displaySurface = py.display.set_mode((WIDTH, HEIGHT))
 py.display.set_caption("Platformer")
+bg = py.image.load("background.png")
+bg = py.transform.scale(bg, (WIDTH * 2, HEIGHT * 2))
 
 
 class Player(py.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = py.Surface((30, 30))
-        self.surf.fill((128, 255, 40))
+        self.image = py.image.load("player.png")
+        self.surf = py.transform.scale(self.image, (40, 40))
         self.rect = self.surf.get_rect(center=(10, 420))
         self.pos = vector((10, 420))
         self.vel = vector((0, 0))
@@ -66,10 +68,9 @@ class Player(py.sprite.Sprite):
 class Coin(py.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.surf = py.Surface((20, 20))
-        self.surf.fill((255, 255, 0))
-        self.rect = self.surf.get_rect(center=(random.randint(0, WIDTH), 0))
-
+        self.image = py.image.load("coin.png")
+        self.image = py.transform.scale(self.image, (20, 20))
+        self.rect = self.image.get_rect()
         self.rect.topleft = pos
 
     def update(self, collector: Player):
@@ -81,8 +82,9 @@ class Coin(py.sprite.Sprite):
 class Platform(py.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = py.Surface((random.randint(50, 100), 12))
-        self.surf.fill((0, 255, 0))
+        self.image = py.image.load("platform.png")
+        self.surf = py.transform.scale(self.image, (random.randint(50, 100), 12))
+
         _w = random.randint(0, WIDTH - 10)
         _h = random.randint(0, HEIGHT - 30)
         self.rect = self.surf.get_rect(center=(_w, _h))
@@ -124,7 +126,6 @@ def platform_generator(_platforms, _all_sprites, _coins):
 
 ground = Platform()
 ground.surf = py.Surface((WIDTH, 20))
-ground.surf.fill((255, 0, 0))
 ground.rect = ground.surf.get_rect(center=(WIDTH / 2, HEIGHT - 10))
 player1 = Player()
 
@@ -156,7 +157,13 @@ while True:
         if event.type == py.KEYUP:
             if event.key == py.K_SPACE:
                 player1.cancel_jump()
-    displaySurface.fill((0, 0, 0))
+    displaySurface.blit(bg, (-50, 0))
+
+    font = py.font.SysFont("Verdana", 20)
+    g = font.render(f"Score: {player1.score}", True, (0, 0, 0))
+    g_width = g.get_width()
+    center = WIDTH / 2 - g_width / 2
+    displaySurface.blit(g, (center, 10))
 
     if player1.rect.top <= HEIGHT / 3:
         player1.pos.y += abs(player1.vel.y)
@@ -170,6 +177,10 @@ while True:
                 coin.kill()
     for entity in all_sprites:
         displaySurface.blit(entity.surf, entity.rect)
+
+    for coin in coins:
+        displaySurface.blit(coin.image, coin.rect)
+        coin.update(player1)
     player1.move()
     player1.update(platforms)
     platform_generator(platforms, all_sprites, coins)  # Uj (a coins parameter)
